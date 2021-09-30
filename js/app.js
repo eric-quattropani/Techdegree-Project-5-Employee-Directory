@@ -5,9 +5,9 @@ const apiUrl = 'https://randomuser.me/api/?results=12&nat=au'
 fetch(apiUrl)
     .then(res => res.json())
     .then(data => {
-        let profile = data.results;
-        generateGallery(profile);
-        modalClick(profile);
+        let person = data.results;
+        generateGallery(person);
+        modalClick(person);
     })
     
 //Maps through the 12 fetched people and appends them in HTML.
@@ -15,7 +15,7 @@ function generateGallery(data) {
     const eachPerson = data.map(person => `
     <div class="card">
     <div class="card-img-container">
-        <img class="card-img" src="${person.picture.large}" alt="profile picture">
+        <img class="card-img" src="${person.picture.large}" alt="person picture">
     </div>
     <div class="card-info-container">
         <h3 id="name" class="card-name cap">
@@ -36,30 +36,31 @@ function generateGallery(data) {
  }
 
 // Modal Cards markup
-function generateModalCard(profile){
+function generateModalCard(person){
     let modalCard = `<div class="modal-container">
                         <div class="modal">
                             <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                             <div class="modal-info-container">
-                                <img class="modal-img" src="${profile.picture.large}" alt="profile picture">
-                                <h3 id="name" class="modal-name cap">${profile.name.first} ${profile.name.last}</h3>
-                                <p class="modal-text">${profile.email}</p>
-                                <p class="modal-text cap">${profile.location.city}</p>
+                                <img class="modal-img" src="${person.picture.large}" alt="person picture">
+                                <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
+                                <p class="modal-text">${person.email}</p>
+                                <p class="modal-text cap">${person.location.city}</p>
                                 <hr>
-                                <p class="modal-text">${profile.phone}</p>
-                                <p class="modal-text">${profile.location.street.number} ${profile.location.street.name}, ${profile.location.city}, ${profile.location.state} ${profile.location.postcode}</p>
-                                <p class="modal-text">Birthday: ${profile.dob.date.slice(5,7)}/${profile.dob.date.slice(8,10)}/${profile.dob.date.slice(0,4)}</p>
+                                <p class="modal-text">${person.phone}</p>
+                                <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.city}, ${person.location.state} ${person.location.postcode}</p>
+                                <p class="modal-text">Birthday: ${person.dob.date.slice(5,7)}/${person.dob.date.slice(8,10)}/${person.dob.date.slice(0,4)}</p>
                             </div>
                         </div>
                     </div>`;
+        // Note: Using the .slice() method required a bit of playing around and googling but got there in the end. 
         gallery.insertAdjacentHTML('beforeend', modalCard);
 
     // Variables for modal functionality.
     const modal = document.querySelector('.modal-container');
-    const modalClose = document.querySelector('.modal-close-btn');
+    const modalCloseButton = document.querySelector('.modal-close-btn');
         
-    // Listens for click on profile card to close.
-    modalClose.addEventListener('click',() => {
+    // Listens for click on person card to close.
+    modalCloseButton.addEventListener('click',() => {
     modal.remove();        
     });
 }
@@ -74,6 +75,5 @@ function modalClick (data){
                 generateModalCard(data[current]);  
                 
         });
-        
     }
 }
